@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteRule ^$ web/index.php
+RewriteRule ^csv$ web/csv.php
+RewriteRule ^([0-9]+)$ web/file.php?id=$1 [L]
