@@ -1,0 +1,61 @@
+CREATE TABLE users (
+	user_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	hash VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE seen_history (
+	seen_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	seen_time_start DATETIME NOT NULL,
+	seen_time_end DATETIME NOT NULL,
+	user_id INT NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(user_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE files (
+	file_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	file_name VARCHAR(255) NOT NULL,
+	user_id INT NOT NULL,
+	wage_time VARCHAR(255) NULL,
+	hourly_wage DECIMAL(15,2) NOT NULL,
+	evening_compensation DECIMAL(15,2) NOT NULL,
+	overtime_first DECIMAL(15,2) NOT NULL,
+	overtime_second DECIMAL(15,2) NOT NULL,
+	overtime_third DECIMAL(15,2) NOT NULL,
+	upload_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (user_id) REFERENCES users(user_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE raw_data (
+	rdata_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	person_name VARCHAR(255) NOT NULL,
+	person_id INT NOT NULL,
+	date DATE NOT NULL,
+	start TIME NOT NULL,
+	end TIME NOT NULL,
+	file_id INT NOT NULL,
+	FOREIGN KEY (file_id) REFERENCES files(file_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE additional_info (
+	add_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	hours DECIMAL(15,2) NOT NULL,
+	overtimehours DECIMAL(15,2) NOT NULL,
+	evening_hours DECIMAL(15,2) NOT NULL,
+	normal_wage DECIMAL(15,2) NOT NULL,
+	evening_wage DECIMAL(15,2) NOT NULL,
+	overtime_wage DECIMAL(15,2) NOT NULL,
+	rdata_id INT NOT NULL,
+	FOREIGN KEY (rdata_id) REFERENCES raw_data(rdata_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE calculated_data (
+	c_data_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	person_id INT NOT NULL,
+	person_name VARCHAR(255) NOT NULL,
+	wage DECIMAL(15,2) NOT NULL,
+	hours DECIMAL(15,2) NOT NULL,
+	overtime_hours DECIMAL(15,2) NOT NULL,
+	evening_hours DECIMAL(15,2) NOT NULL,
+	file_id INT NOT NULL,
+	FOREIGN KEY (file_id) REFERENCES files(file_id)	
+)
